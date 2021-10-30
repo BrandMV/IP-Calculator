@@ -1,5 +1,4 @@
 const ip = "10.0.0.0"
-//Validación de IP
 let octects = ip.split('.')
 let defaultMask 
 let netClass
@@ -12,6 +11,16 @@ let firstSubNet = []
 let octectToModify = 3
 
 octects = octects.map(octect => Number.parseInt(octect,10))
+
+const validateIP = (ip) => {
+    if(/^(22[0-3]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ip))
+        return true
+    else return false
+}
+
+const isIpValid = validateIP(ip)
+if(!isIpValid)
+    console.log("Inserte una IP válida o que pertenezca a clase A, B o C");
 
 
 if(octects[0] >= 0 && octects[0]<= 127){
@@ -48,7 +57,11 @@ if(octects[0] >= 192 && octects[0]<= 223){
 for(i=0;i<32;i++){
     res = res + Math.pow(2,i)
 }
+
 res
+
+//Función que calcula el prefijo de la nueva submascara. sumamos los bits destinados para red dependiendo la clase y la potencia necesaria para las subredes
+const prefixFunc = powSubnet => netBits + powSubnet
 //Función que calcula nueva mascara
 const getNewMask = (expo) => {
     return ( ( ( res << expo ) >>> 0).toString(2)).match(/.{1,8}/g).map(byte => parseInt(byte, 2)) 
@@ -100,8 +113,10 @@ const subnetsCalc = (hop, totalSubnetworks) => {
             acc2 += 1
             subnet[octectToModify] = 0
             subnet[octectToModify-1] = acc2
-        }else if(subnet[octectToModify-1] >= 256){
+        }
+        if(subnet[octectToModify-1] >= 256){
             acc = 0
+            acc2 = 0
             acc3 += 1
             subnet[octectToModify-1] = 0
             subnet[octectToModify-2] = acc3
@@ -188,7 +203,15 @@ const hostCalc = (sub, gotHosts) => {
     return hostXsubnet
 }
 //Usando subredes
-const requireSubnets = 7
+const requireSubnets = 4194304
+
+//Restricciones
+if(netClass == "Clase A" && requireSubnets > 4194304)
+    console.log("Inserte un número valido de subredes, inserte un valor de 1 a 4194304");
+if(netClass == "Clase B" && requireSubnets > 16384)
+    console.log("Inserte un número valido de subredes, inserte un valor de 1 a 16384");
+if(netClass == "Clase C" && requireSubnets > 64)
+    console.log("Inserte un número valido de subredes, inserte un valor de 1 a 64");
 const expoSubnets = Math.ceil(Math.log2(requireSubnets))
 expoSubnets //modificar en mascara
 const gotSubnets = Math.pow(2,expoSubnets)
@@ -201,8 +224,7 @@ totalHostSubnet
 const newMaskSubnet = getNewMask(hostPow)
 newMaskSubnet
 
-//Función que calcula el prefijo de la nueva submascara. sumamos los bits destinados para red dependiendo la clase y la potencia necesaria para las subredes
-const prefixFunc = powSubnet => netBits + powSubnet
+
 
 const prefixSubnet = prefixFunc(expoSubnets)
 prefixSubnet
@@ -227,7 +249,16 @@ broadcastAdrrSubnet[3] = broadcastAdrrSubnet[3]+1
 broadcastAdrrSubnet
 
 //Usando Hosts
-let requireHosts = 254
+let requireHosts = 1
+
+//Restricciones
+if( netClass == "Clase A" && requireHosts > 16777214 )
+    console.log("Inserte una cantidad de Hosts válida, inserte un valor de 1 a 16777214");
+if( netClass == "Clase B" && requireHosts > 65534 )
+    console.log("Inserte una cantidad de Hosts válida, inserte un valor de 1 a 65534");
+if( netClass == "Clase C" && requireHosts > 254 )
+    console.log("Inserte una cantidad de Hosts válida, inserte un valor de 1 a 254");
+    
 let gotHosts
 expoHost = Math.ceil(Math.log2(requireHosts+2))
 expoHost
@@ -264,10 +295,43 @@ broadcastAdrr
 
 //Usando el prefijo
 
-const requirePrefix = 25
+const requirePrefix = 24
 //Restricciones
 if( requirePrefix < 8 || requirePrefix > 30 ){
     console.log("Prefijo no valido, prueba con un valor de 8 a 30");
 }
+if( netClass == "Clase B" && requirePrefix < 16 )
+    console.log("Prefijo no válido para clase B, inserte un valor de 16 a 30");
 
+if( netClass == "Clase C" && requirePrefix < 24 )
+    console.log("Prefijo no válido para clase C, inserte un valor de 24 a 30");
 
+const subnetPowPrefix = requirePrefix - netBits
+subnetPowPrefix
+const hostPowPrefix = hostBits - subnetPowPrefix
+hostPowPrefix
+
+const newMaskPrefix = getNewMask(hostPowPrefix)
+newMaskPrefix
+
+const totalHostPrefix = Math.pow(2,hostPowPrefix)-2
+totalHostPrefix
+
+const totalSubnetsPrefix = Math.pow(2,subnetPowPrefix)
+totalSubnetsPrefix
+
+const hopPrefix = hopFunc(requirePrefix, newMaskPrefix)
+hopPrefix
+
+const subnetsListPrefix = subnetsCalc(hopPrefix, totalSubnetsPrefix)
+console.log(subnetsListPrefix);
+console.log(subnetsListPrefix[subnetsListPrefix.length-1]);
+
+const hostPrefix = subnetsListPrefix[0]
+hostPrefix
+const hostListPrefix = hostCalc(hostPrefix, totalHostPrefix)
+console.log(hostListPrefix);
+console.log(hostListPrefix[hostListPrefix.length-1]);
+const broadcastAdrrPrefix = hostListPrefix[hostListPrefix.length-1]
+broadcastAdrrPrefix[3] = broadcastAdrrPrefix[3]+1
+broadcastAdrrPrefix
