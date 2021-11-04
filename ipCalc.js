@@ -1,26 +1,46 @@
-const ip = "10.0.0.0"
-let octects = ip.split('.')
-let defaultMask 
-let netClass
-let expo
-let subnetBits
-let hostBits
-let maskBits
-let res = 0
-let firstSubNet = []
-let octectToModify = 3
+const ip = "10.0.0.0"               //Variable que alamcena la ip que ingresa usuario
+let octects = ip.split('.')         //Hacemos los octetos de la ip separando la ip por el punto
+let defaultMask                     //Variable para la mascara por defecto      
+let netClass                        //Variable apra la clase por defecto 
+let expo                            //Variable que guardara el exponente al que sera elevado el 2 para obtener subredes y hosts
+let subnetBits                      //Variable que almacena los bits de subnet
+let hostBits                        //Variable que almacena el número de bits para host
+let maskBits                        //Variable que almacena la cadena de bits de la mascara
+let res = 0                         //Variable que almacena res; variable constante para calculos
+let firstSubNet = []                //Arreglo que contendra la primera subred
+let octectToModify = 3              //Variable para saber el octeto de la ip a modificar, por defecto se modifica el 3
 
+
+//Rrecorremos cada octeto y lo ocnvertimos en un número entero
 octects = octects.map(octect => Number.parseInt(octect,10))
 
+
+/** 
+ *  Función utilizada para validar una dirección IP ingresada por el uusario
+ *  Hacemos uso de una expresión regular que indica si una IP es válida o no
+ *  @param ip La ip escrita por el usario
+ *  @returns true si es ip valida o false en caso de no ser una ip valida
+*/
 const validateIP = (ip) => {
+    //  Testeamos la ip del usuairo con la expresion regular
     if(/^(22[0-3]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ip))
-        return true
-    else return false
+        return true     //  True si es valida
+    else return false   //  False si no es valida
 }
 
-const isIpValid = validateIP(ip)
-if(!isIpValid)
-    console.log("Inserte una IP válida o que pertenezca a clase A, B o C");
+/**
+ *  Función que arroja un mensaje si la ip no es valida
+ *  @param * No recibe parametros
+ *  @returns Mensaje indicando que no es una ip válida 
+*/
+const isIpValid = () =>{
+    //Si la ip no es válida arrojamos mensaje indicando que ingrese otra IP
+    if(!validateIP(ip)) 
+        console.log("Inserte una IP válida o que pertenezca a clase A, B o C");
+} 
+
+//Llamada a la funciónq queverifica la ip
+isIpValid()
 
 
 if(octects[0] >= 0 && octects[0]<= 127){
