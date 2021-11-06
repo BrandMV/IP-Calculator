@@ -352,13 +352,12 @@ totalHostSubnet
 const newMaskSubnet = getNewMask(hostPow, res)                   //  Mandamos a llamar a la funcion que calcula nueva mascara
 newMaskSubnet
 
-
-
 const prefixSubnet = prefixFunc(completeIP ,expoSubnets)                // Calculamos el prefijo
 prefixSubnet
 
 const hopSubnet = hopFunc(completeIP ,prefixSubnet, newMaskSubnet)      //  Calculamos el salto de cada subred
 hopSubnet
+
 
 const subnetListSubnet = subnetsCalc(completeIP ,hopSubnet, gotSubnets) //  Calculamos la lista de sub redes
 
