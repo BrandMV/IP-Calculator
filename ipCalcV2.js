@@ -334,7 +334,7 @@ const subnetsRestric = ( { netClass }, requireSubnets ) => {
 }
 
 //  Cantidad de subredes requeridas
-const requireSubnets = 4194304 
+const requireSubnets = 500 
 
 //  Mandamos a llamar a la función de las restricciones
 subnetsRestric(completeIP, requireSubnets)
@@ -357,7 +357,8 @@ prefixSubnet
 
 const hopSubnet = hopFunc(completeIP ,prefixSubnet, newMaskSubnet)      //  Calculamos el salto de cada subred
 hopSubnet
-
+octectToModify
+//  Terminan calculos necesarios
 
 const subnetListSubnet = subnetsCalc(completeIP ,hopSubnet, gotSubnets) //  Calculamos la lista de sub redes
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="card-container">
+    <div class="card">
         <i :class="icon"></i>
         <div class="card-content">
             <h3>{{ title }}</h3>
@@ -27,11 +27,16 @@ export default {
         box-sizing: border-box;
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
         border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 2.6rem;
+        padding: 1.5rem;
+        transition: 0.2s ease-in-out;
+
     }
     .card-content{
         display: flex;
         flex-direction: column;
-        align-items: center;
     }
     h3{
         font-size: 2.2rem;
@@ -43,6 +48,10 @@ export default {
         font-weight: bold;
     }
     i{
-        font-size: 5rem;
+        font-size: 4rem;
+        color: black;
+    }
+    .card:hover{
+        transform: translateY(-3%);
     }
 </style>
