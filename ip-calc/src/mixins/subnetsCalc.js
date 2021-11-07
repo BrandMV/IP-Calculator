@@ -9,6 +9,7 @@ export default{
          * @returns La cantidad total de subredes que tiene la red expresada con sus octetos
          */
            subnetsCalc(){
+            // this.subnetListSubnet = []
             //En un arreglo temporal vamos a guardar arreglos de subredes que serán modificadas despues
             const temporalNet = new Array(this.gotSubnets).fill(this.completeIP.firstSubNet)
             let acc = 0         //  Variable auxiliar de acumulador
@@ -53,7 +54,7 @@ export default{
                     subnet[1] = this.ipOctects[1]            //  El segundo octeto de cada subred sera el segundo de la red ingresada
                 }
                 if(this.completeIP.netClass == "Clase C"){          //  Si la clase es tipo C
-                    subnet[0] = this.pOctects[0]            //  El primer octeto de cada subred sera el primero de la red ingresada    
+                    subnet[0] = this.ipOctects[0]            //  El primer octeto de cada subred sera el primero de la red ingresada    
                     subnet[1] = this.ipOctects[1]            //  El segundo octeto de cada subred sera el segundo de la red ingresada
                     subnet[2] = this.ipOctects[2]            //  El tercer octeto de cada subred sera el tercer de la red ingresada
                 }

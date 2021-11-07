@@ -1,7 +1,7 @@
 
 
 
-const ip = "10.0.0.0"               //Variable que alamcena la ip que ingresa usuario
+const ip = "192.0.0.0"               //Variable que alamcena la ip que ingresa usuario
 
 let expo                            //Variable que guardara el exponente al que sera elevado el 2 para obtener subredes y hosts
 
@@ -71,7 +71,7 @@ const getIpObject = (ipOctects) => {
             firstSubNet : [ipOctects[0], ipOctects[1], 0, 0]    //  La primera subred de la direccion
         }
     }
-    if(ipOctects[0] >= 192 && octecipOctectsts[0]<= 223){       //  Si la ip es clase C se inicializan los valores
+    if(ipOctects[0] >= 192 && ipOctects[0]<= 223){       //  Si la ip es clase C se inicializan los valores
          ObjectIp = {
             netClass    : "Clase C",                            //  Asignamos la clase
             defaultMask : "255.255.255.0",                      //  Asignamos la mascara por defecto
@@ -334,7 +334,7 @@ const subnetsRestric = ( { netClass }, requireSubnets ) => {
 }
 
 //  Cantidad de subredes requeridas
-const requireSubnets = 500 
+const requireSubnets = 2 
 
 //  Mandamos a llamar a la función de las restricciones
 subnetsRestric(completeIP, requireSubnets)
