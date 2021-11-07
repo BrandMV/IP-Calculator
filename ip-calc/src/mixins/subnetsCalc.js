@@ -62,6 +62,9 @@ export default{
                 return subnet                       //  Retornamos cada subred
             })      
             // this.broadcastAdrrSubnet = broadcastCalc()
+            this.$toast.info('Da clic en una dirección para saber sus direcciones de host',{
+                duration: 5000
+            })
         }
     },
 }

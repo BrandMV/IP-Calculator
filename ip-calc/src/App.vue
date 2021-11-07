@@ -1,22 +1,24 @@
 <template>
-<div class="container">
-  <main>
-    <h1>calculadora ip</h1>
-  </main>
+  <section>
+    <div class="container">
+      <main>
+        <h1>calculadora ip</h1>
+      </main>
 
-  <section id="tabs-list" class="tabs">
-    <button
-      v-for="tab in tabs"
-      :key = "tab"
-      :class="['tab-button', { active: currentTab === tab }]"
-      @click = "currentTab = tab"
-    >
-      {{ tab }}
-    </button>
+      <section id="tabs-list" class="tabs">
+        <button
+          v-for="tab in tabs"
+          :key = "tab"
+          :class="['tab-button', { active: currentTab === tab }]"
+          @click = "currentTab = tab"
+        >
+          {{ tab }}
+        </button>
+      </section>
+      <component :is="currentTabComponent" class="tab"></component>
+    </div>
+    <Footer/>
   </section>
-  <component :is="currentTabComponent" class="tab container"></component>
-
-</div>
 </template>
 
 <script>
@@ -24,10 +26,11 @@
 import Subnets from './components/Tabs/Subnets.vue'
 import Hosts from './components/Tabs/Hosts.vue'
 import Prefix from './components/Tabs/Prefix.vue'
+import Footer from './components/Footer.vue'
 
 export default {
   name: 'App',
-  components: { Subnets, Hosts, Prefix },
+  components: { Subnets, Hosts, Prefix, Footer },
   el: "#tabs-list",
   data() {
     return {
@@ -47,15 +50,14 @@ export default {
 
 <style scoped>
 .container{
-  margin: 0 13.5rem;
+  margin: 0 8rem;
   margin-top: 6rem;
+  margin-bottom: 6rem;
   max-width: 100%;
   display: flex;
-  align-content: center;
-  justify-content: center;
   flex-direction: column;
-  max-height: 100vh;
-  border: 1px solid red;
+  max-height: 100%;
+  /* height: 100vh; */
 
 }
 h1{
@@ -107,7 +109,6 @@ main{
 
 .tab{
   margin-top: 6.9rem;
-  border: 1px solid red;
 }
 
 /* Animaciones */
@@ -162,4 +163,22 @@ main{
     background: linear-gradient(to left, #D3DCD2 100%, white 0%);
   }
 }
+@media (max-width: 650px){
+  h1{
+    font-size: 3rem;
+  }
+  .tab-button{
+    font-size: 2rem;
+  }
+}
+@media (max-width: 500px){
+  h1{
+    font-size: 2rem;
+  }
+  .tab-button{
+    font-size: 1.5rem;
+  }
+}
+
+
 </style>

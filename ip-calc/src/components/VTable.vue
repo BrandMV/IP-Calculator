@@ -9,7 +9,7 @@
            <tbody v-for="(sub, index) in list" :key="index" > 
                 <tr>
                     <td> {{ index+1 }} </td>
-                    <td @click="calc(sub), $emit('modalShow')" style="cursor: pointer" > {{ sub.join('.') }} </td>
+                    <td @click="calc(sub), $emit('modalShow')" style="cursor: pointer" > {{ sub.join('.') }}/{{ pre }} </td>
                 </tr> 
             </tbody>
         </table>
@@ -18,7 +18,7 @@
 <script>
 export default {
     name: "VTable",
-    props: { title: String, list: Array, calc: Function },
+    props: { title: String, list: Array, calc: Function, pre:Number},
     methods: {
         openModal(){
             this.$emit()
@@ -26,7 +26,7 @@ export default {
     }
 }
 </script>
-<style>
+<style scoped>
     h2{
     text-transform: uppercase;
     font-size: 2.5rem;

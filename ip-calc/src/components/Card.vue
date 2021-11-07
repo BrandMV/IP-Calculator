@@ -54,4 +54,25 @@ export default {
     .card:hover{
         transform: translateY(-3%);
     }
+
+    @media (max-width: 790px) {
+        .card{
+            height: 15rem;
+            gap: 1rem;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .card-content{
+            align-items: center;
+        }
+    }
+    @media (max-width: 400px) {
+        h3,p{
+            font-size: 2rem;
+        }
+        i{
+            font-size: 3rem;
+        }
+    }
 </style>

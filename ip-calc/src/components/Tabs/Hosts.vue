@@ -5,10 +5,12 @@
         <!-- <card icon="fas fa-project-diagram" title=""></card> -->
         <form class="form-container">
             <div class="text-field">
+                <label>Dirección IP</label>
                 <input v-model.lazy="ip" placeholder="Dirección IP" required @blur="isIpValid()">
             </div>
             <div class="text-field">
-                <input v-model.lazy="requireSubnets" type="number" placeholder="No. SUBREDES" required @blur="ipCalcs()" >
+                <label>No. Hosts</label>
+                <input v-model.lazy="requireNumber" type="number" placeholder="No. Hosts" required @blur="ipCalcs()" >
             </div>
         </form>
         <div class="cards" v-if=" cards.length > 1">
@@ -16,7 +18,8 @@
                 v-for="(card, index) in cards" :key="index"
                 :title="card.title"
                 :icon="card.icon"
-                :value="card.value"
+                :value="card.value.toString()"
+
             >
 
             </card>
@@ -44,17 +47,22 @@
                 :list="subnetListSubnet"
                 @modalShow="showModal = true"
                 :calc="hostCalc"
+                :pre="prefixSubnet"
+
             >
 
             </VTable>
         </section>
-          <modal v-if="showModal" @close="showModal = false" :hosts="hostsList">
+          <modal v-if="showModal" @close="showModal = false" :hosts="hostsList"
+            :broad="broadcastAdrrSubnet"  
+          >
             <!--
             you can use custom content here to overwrite
             default content
             -->
             <h3>custom header</h3>
         </modal>
+        <Footer/>
     </div>
 </template>
 <script>
@@ -66,6 +74,7 @@ import hostCalc from "../../mixins/hostCalc"
 import ipMixin from "../../mixins/ipMixin"
 import maskCalc from "../../mixins/maskCalc"
 import prefix from "../../mixins/prefix"
+import hop from "../../mixins/hop"
 
 
 export default {
@@ -73,11 +82,10 @@ export default {
     components : { Card, Modal, VTable },
     data() {
         return {
-            title: "NO. SUBREDES",
             ip: '',
             res: 0,
             octectToModify : 3,              //Variable para saber el octeto de la ip a modificar, por defecto se modifica el último
-            requireSubnets: 0,
+            requireNumber: 0,
             ipOctects: [],
             completeIP:{},
             expoSubnets: 0,
@@ -97,38 +105,10 @@ export default {
         }
     },
     mixins: [
-        subnetsCalc, hostCalc, ipMixin, maskCalc, prefix
+        subnetsCalc, hostCalc, ipMixin, maskCalc, prefix, hop
     ],
     methods: {
-        /**
-         * Función que calcula el salto para ir calculando las subredes de la dirección requerido de acuerdo a los hosts, subredes o prefijo
-         * @param {*} prefix El prefijo de la red
-         * @param {*} newMask La nueva mascara calculada anteriormente
-         * @param {*} netClass La clase de la dirección Ip
-         * @returns Retorna el salto para cada subred
-        */
-        hopFunc(){
-            let hop                                 
-            if(this.completeIP.netClass == "Clase A")                       //  Si la clase es A:
-                if (this.prefixSubnet >= 8 && this.prefixSubnet <= 16){           
-                    hop = 256 - this.newMaskSubnet[1]                      //  Si el prefijo esta entre 8 y 16 el salto será de 256 menos el segundo octeto     
-                    this.octectToModify = 1                               //  El octeto a modificar sera el segundo
-                } else if(this.prefixSubnet >= 17 && this.prefixSubnet <=24){         //  Si el prefijo esta entre 17 y 24:
-                    hop = 256 - this.newMaskSubnet[2]                          //  El salto sera 256 - el octeto 3 de la red
-                    this.octectToModify = 2                              //  El octeto a modificar sera el 3
-                } else hop = 256 - this.newMaskSubnet[3]                   //  En otro caso el salto sera 256 menos el valor del ultimo octeto
 
-            if(this.completeIP.netClass == "Clase B")                       //  Si la clase es B:
-                if (this.prefixSubnet >= 16 && this.prefixSubnet <= 24){              //Si el octeto esta entre 16 y 24
-                    hop = 256 - this.newMaskSubnet[2]                          //  El salto sera 256 - el octeto 3 de la red
-                    this.octectToModify = 2                              //  El octeto a modificar sera el 3
-                } else hop = 256 - this.newMaskSubnet[3]               //  En otro caso el salto sera 256 menos el valor del ultimo octeto
-
-            if(this.completeIP.netClass == "Clase C")                       //  Si la clase es C:
-                hop = 256 - this.newMaskSubnet[3]                          //  En otro caso el salto sera 256 menos el valor del ultimo octeto       
-
-            return hop                                      //Retornamos el salto resultante
-        },
         //Restricciones
 
         /**
@@ -138,21 +118,21 @@ export default {
         subnetsRestric () {
             console.log(this.completeIP.netClass);
             //  Si es clase A y se requieren mas subredes de las que se pueden crear manda error
-            if(this.completeIP.netClass == "Clase A" && this.requireSubnets > 4194304){
-                this.msg = "Inserte un número valido de subredes, inserte un valor de 1 a 4194304"
+            if(this.completeIP.netClass == "Clase A" && this.requireNumber > 16777214){
+                this.msg = "Inserte una cantidad de Hosts válida, inserte un valor de 1 a 16777214"
                 return true
             } 
                 
             //  Si es clase B y se requieren mas subredes de las que se pueden crear manda error
-            if(this.completeIP.netClass == "Clase B" && this.requireSubnets > 16384){
-                this.msg = "Inserte un número valido de subredes, inserte un valor de 1 a 16384"
+            if(this.completeIP.netClass == "Clase B" && this.requireNumber > 65534){
+                this.msg = "Inserte una cantidad de Hosts válida, inserte un valor de 1 a 65534"
                 return true
             }
             
 
             //  Si es clase C y se requieren mas subredes de las que se pueden crear manda error
-            if(this.completeIP.netClass == "Clase C" && this.requireSubnets > 64){
-                this.msg = "Inserte un número valido de subredes, inserte un valor de 1 a 64"
+            if(this.completeIP.netClass == "Clase C" && this.requireNumber > 254){
+                this.msg = "Inserte una cantidad de Hosts válida, inserte un valor de 1 a 254"
                 return true
              }
             
@@ -166,11 +146,11 @@ export default {
             if(this.subnetsRestric())
                 alert(this.msg)
             else{
-                this.expoSubnets = Math.ceil(Math.log2(this.requireSubnets))        //  Calculamos el exponente de la subred
+                this.hostPow = Math.ceil(Math.log2(this.requireNumber+2))               //  Calculamos la potencia necesaria para calcular los hosts                  
+                this.totalHostSubnet =  Math.pow(2,this.hostPow)-2                  //  Calculammos el numero total de hosts que tendra cada subred
+                this.expoSubnets = this.completeIP.hostBits - this.hostPow      //  Calculamos el exponente de la subred
                 console.log(this.expoSubnets);
                 this.gotSubnets = Math.pow(2,this.expoSubnets)                      //  Calculamos la cantidad de subredes totales            
-                this.hostPow = this.completeIP.hostBits - this.expoSubnets               //  Calculamos la potencia necesaria para calcular los hosts                  
-                this.totalHostSubnet =  Math.pow(2,this.hostPow)-2                  //  Calculammos el numero total de hosts que tendra cada subred
                 this.newMaskSubnet = this.getNewMask(this.hostPow)                   //  Mandamos a llamar a la funcion que calcula nueva mascara
                 this.prefixSubnet = this.prefixFunc()                // Calculamos el prefijo
                 this.hopSubnet = this.hopFunc()      //  Calculamos el salto de cada subred
@@ -198,7 +178,13 @@ export default {
     }
 }
 </script>
+ 
 <style scoped>
+   label{
+        display: block;
+        font-size: 1.6rem;
+
+    }
     .container-sub{
         /* margin-top: 6.9rem; */
      
@@ -253,10 +239,14 @@ button:hover{
 }
 
 .subnets-list{
-    border: 1px solid green;
     margin-top: 5rem;
     overflow: auto;
     max-height: 100%;
+}
+@media (max-width: 400px) {
+    .calc{
+        font-size: 2.5rem;
+    }
 }
 
 </style>

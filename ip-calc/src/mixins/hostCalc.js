@@ -75,6 +75,10 @@ export default{
                 return s                            //  Retornamo cada red de host
 
             })
+            const broad = this.hostsList[this.hostsList.length-1]
+            broad[3] = broad[3]+1
+            this.broadcastAdrrSubnet = broad.join('.')
+            broad[3] = broad[3]-1
         }
     },
 }

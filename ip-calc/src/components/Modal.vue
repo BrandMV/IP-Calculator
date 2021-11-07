@@ -9,11 +9,12 @@
                             </button>
                         </div>
                         <div class="modal-body">
+                          <h3>Dir. de broadcast: {{ broad }}</h3>
                             <VTable
                                 title="Lista de Hosts"
                                 :list="hosts"
                                 @modalShow="showModal = true"
-                                :calc="hostCalc"
+                                
                             >
 
                             </VTable>
@@ -33,38 +34,45 @@ import VTable from './VTable.vue'
 export default {
     name: "modal",
     props: {
-        hosts: Array
+        hosts: Array,
+        broad: String
     },
     components: { VTable }
     
 }
 </script>
-<style>
+<style scoped>
 .modal-mask {
     display: flex;
     justify-content: center;
+    /* align-items: center; */
   position: fixed;
   z-index: 9998;
   top: 0;
   left: 0;
   width: 100%;
+  max-width: 100vw;
   background-color: rgba(0, 0, 0, .5);
   max-height: 100vh;
-    overflow-y: auto;
+  height: 100%;
+    overflow: auto;
   transition: opacity .3s ease;
-  border: 1px solid red;
     /* transform: translateX(50%); */
 }
 
 .modal-wrapper {
-  display: table-cell;
-  vertical-align: middle;
+  /* display: table-cell; */
+  /* vertical-align: middle; */
 
 
 }
+/* h3{
+  marginbot
+} */
 
 .modal-container {
-  width: 300px;
+  width: 80rem;
+  max-width: 100vw;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;
@@ -75,9 +83,11 @@ export default {
 
 }
 
-.modal-header h3 {
+ h3 {
   margin-top: 0;
   color: #42b983;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .modal-body {
