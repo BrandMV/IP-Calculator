@@ -150,8 +150,8 @@ export default {
                 this.newMaskSubnet = this.getNewMask(this.hostPow)                   //  Mandamos a llamar a la funcion que calcula nueva mascara
                 this.totalHostSubnet =  Math.pow(2,this.hostPow)-2                  //  Calculammos el numero total de hosts que tendra cada subred
                 this.gotSubnets = Math.pow(2,this.expoSubnets)                      //  Calculamos la cantidad de subredes totales            
-                this.hopSubnet = this.hopFunc()      //  Calculamos el salto de cada subred
                 this.prefixSubnet = this.requireNumber               // Calculamos el prefijo
+                this.hopSubnet = this.hopFunc()      //  Calculamos el salto de cada subred
                 console.log(this.expoSubnets);
                 this.cards.push({
                     icon:"fas fa-project-diagram", 
