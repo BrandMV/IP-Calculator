@@ -8,14 +8,13 @@ let expo                            //Variable que guardara el exponente al que 
 let octectToModify = 3              //Variable para saber el octeto de la ip a modificar, por defecto se modifica el último
 
 /**
- * 
+ * Función que obtiene los octetos de la ip ingresada
  * @param ip La ip escrita por el usuario 
  * @returns Los octetos de la dirección ip ingresada
 */
 const getOctects = (ip) => ip.split('.').map(octect => Number.parseInt(octect,10))
 
 const ipOctects = getOctects(ip)    //  Mandamos a llamar a la función que calcula los octetos
-ipOctects
 
 /** 
  *  Función utilizada para validar una dirección IP ingresada por el uusario
@@ -87,7 +86,6 @@ const getIpObject = (ipOctects) => {
 
 
 const completeIP = getIpObject(ipOctects)   //  Mandamos a llamar la función que obtiene los detalles de la IP
-completeIP
 
 /**
  * Función que calcula una constante que nos servirá para el calculo de las nuevas submascaras de las redes
@@ -102,9 +100,7 @@ const auxSubmaskCalc = () =>{
 }
 
 const res = auxSubmaskCalc()        //Mandamos a llamar la función que nos retorna la constante auxiliar para calculo de submascaras nuevas
-res
 
-//Función que calcula el prefijo de la nueva submascara. sumamos los bits destinados para red dependiendo la clase y la potencia necesaria para las subredes
 
 /**
  * Función que calcula el prefijo de la nueva submascara
@@ -341,29 +337,20 @@ subnetsRestric(completeIP, requireSubnets)
 
 
 const expoSubnets = Math.ceil(Math.log2(requireSubnets))        //  Calculamos el exponente de la subred
-expoSubnets //modificar en mascara
 const gotSubnets = Math.pow(2,expoSubnets)                      //  Calculamos la cantidad de subredes totales
-gotSubnets
 const hostPow = completeIP.hostBits - expoSubnets               //  Calculamos la potencia necesaria para calcular los hosts                  
-hostPow //para calcular total hosts
 const totalHostSubnet =  Math.pow(2,hostPow)-2                  //  Calculammos el numero total de hosts que tendra cada subred
-totalHostSubnet
     //obteniendo nueva mascara
 const newMaskSubnet = getNewMask(hostPow, res)                   //  Mandamos a llamar a la funcion que calcula nueva mascara
-newMaskSubnet
 
 const prefixSubnet = prefixFunc(completeIP ,expoSubnets)                // Calculamos el prefijo
-prefixSubnet
 
 const hopSubnet = hopFunc(completeIP ,prefixSubnet, newMaskSubnet)      //  Calculamos el salto de cada subred
-hopSubnet
-octectToModify
 //  Terminan calculos necesarios
 
 const subnetListSubnet = subnetsCalc(completeIP ,hopSubnet, gotSubnets) //  Calculamos la lista de sub redes
 
 subnetHost = subnetListSubnet[0]
-subnetHost
 
 console.log(subnetListSubnet);
 console.log(subnetListSubnet[subnetListSubnet.length-1]);
@@ -385,7 +372,6 @@ const broadcastCalc = (hosts) =>{
 } 
     
 const broadcastAdrrSubnet = broadcastCalc(hostsList)    //  LLamamos a la función que calcula la broadcast
-broadcastAdrrSubnet
 
 //Usando Hosts
 
@@ -410,31 +396,21 @@ const hostRestric = ({ netClass }, requireHosts) => {
 hostRestric(completeIP, requireHosts)                   //  Llamamos a la función que verifica los hosts
 
 const expoHost = Math.ceil(Math.log2(requireHosts+2))   //  Calculamos el exponente necesario para obtener los hosts
-expoHost
 
 const gotHosts = Math.pow(2,expoHost)-2                 //  Calculamos la cantidad de hosts
-gotHosts
 
 let subnetPow = completeIP.hostBits - expoHost          //  Calculamos la potencia de la subred
-completeIP.hostBits
-subnetPow
 
 const totalSubnetworksHost = Math.pow(2,subnetPow)      //  Calculamos el total se subredes
-totalSubnetworksHost
 
 const newMaskHost = getNewMask(expoHost, res)           //  Calculamos la nueva mascara
-newMaskHost
 const prefixHost = prefixFunc(completeIP, subnetPow)    //  Calculammos el prefijo                
-prefixHost
 
 const hopHost = hopFunc(completeIP, prefixHost, newMaskHost)        
-hopHost
-ipOctects
 
 const subnetList = subnetsCalc(completeIP, hopHost, totalSubnetworksHost)   //  Calculamos la lista de subredes
 subnetHost = subnetList[0]
-subnetHost
-gotHosts
+
 console.log(subnetList);
 console.log(subnetList[subnetList.length-1]);
 
@@ -444,7 +420,6 @@ console.log(totalHost[totalHost.length-1]);
 console.log(totalHost);
 
 const broadcastAddr = broadcastCalc(totalHost)                  //  Calculamos la red de broadcast
-broadcastAddr
 
 //Usando el prefijo
 
@@ -474,31 +449,23 @@ prefixRestric(completeIP, requirePrefix)        //  Llamamos a la funcion paara 
 
 
 const subnetPowPrefix = requirePrefix - completeIP.netBits                          //  Calculamos la potencia para subredes
-subnetPowPrefix
 const hostPowPrefix = completeIP.hostBits - subnetPowPrefix                         //  Calculamos la potencia para hosts
-hostPowPrefix
 
 const newMaskPrefix = getNewMask(hostPowPrefix, res)                                //  Calculamos la nueva mascara
-newMaskPrefix
 
 const totalHostPrefix = Math.pow(2,hostPowPrefix)-2                                 //  Calculamos el total de host 
-totalHostPrefix
 
 const totalSubnetsPrefix = Math.pow(2,subnetPowPrefix)                              //  Total de subredes
-totalSubnetsPrefix
 
 const hopPrefix = hopFunc(completeIP, requirePrefix, newMaskPrefix)                 //  Calculamos el salto
-hopPrefix
 
 const subnetsListPrefix = subnetsCalc(completeIP, hopPrefix, totalSubnetsPrefix)    //  Calculamos las direcciones de subredes
 console.log(subnetsListPrefix);
 console.log(subnetsListPrefix[subnetsListPrefix.length-1]);
 
 const hostPrefix = subnetsListPrefix[0]
-hostPrefix
 const hostListPrefix = hostCalc(completeIP, hostPrefix, totalHostPrefix)            //  Calculamos las direcciones de hosts de una subred
 console.log(hostListPrefix);
 console.log(hostListPrefix[hostListPrefix.length-1]);
 
 const broadcastAdrrPrefix = broadcastCalc(hostListPrefix)                           //  Calculamos la direción de broadcast
-broadcastAdrrPrefix

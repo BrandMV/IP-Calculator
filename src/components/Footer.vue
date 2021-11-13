@@ -1,6 +1,6 @@
 <template>
     <footer>
-        <p>With 💖 by <a href="https://github.com/BrandMV">SiuuuTeam</a></p>
+        <p>With 💖 by <a href="https://github.com/BrandMV">BrandMV</a></p>
     </footer>
 </template>
 <script>

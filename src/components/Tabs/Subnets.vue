@@ -1,8 +1,5 @@
 <template>
     <div class="container-sub">
-        <!-- <input-field :title="title"></input-field> -->
-        <!-- <input-field :title="title"></input-field> -->
-        <!-- <card icon="fas fa-project-diagram" title=""></card> -->
         <form class="form-container">
             <div class="text-field">
                 <label>Dirección IP</label>
@@ -24,23 +21,7 @@
             </card>
             <button class="calc" @click="subnetsCalc()">calcular</button>
         </div>
-        <section class="subnets-list" v-if="hasSubnets">
-            <!-- <h2>lista de subredes</h2>
-            <table>
-                <tr>
-                    <th>id</th>
-                    <th>dirección</th>
-                </tr>
-                <tbody v-for="(sub, index) in subnetListSubnet" :key="index" > 
-                    <tr>
-                        <td> {{ index+1 }} </td>
-                        <td @click="hostCalc(sub), showModal = true" style="cursor: pointer" > {{ sub.join('.') }} </td>
-                    </tr>
-               
-                </tbody>
-
-            </table> -->
-            
+        <section class="subnets-list" v-if="hasSubnets">     
             <VTable
                 title="Lista de Subredes"
                 :list="subnetListSubnet"
@@ -55,10 +36,6 @@
           <modal v-if="showModal" @close="showModal = false" :hosts="hostsList"
             :broad="broadcastAdrrSubnet"  
             >
-            <!--
-            you can use custom content here to overwrite
-            default content
-            -->
             <h3>custom header</h3>
         </modal>
     </div>
@@ -131,7 +108,7 @@ export default {
             if(this.completeIP.netClass == "Clase C" && this.requireNumber > 64){
                 this.msg = "Inserte un número valido de subredes, inserte un valor de 1 a 64"
                 return true
-             }
+            }
             
         },
         /**
