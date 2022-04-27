@@ -1,5 +1,7 @@
 # ip-calculator
 
+Try it out! - https://ipcalculator.netlify.app/
+
 ## Project setup
 ```
 yarn install
